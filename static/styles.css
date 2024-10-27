@@ -1,0 +1,140 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    width: 90%;
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+    background: #fff;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+    text-align: center;
+    color: #333;
+}
+
+label {
+    display: block;
+    margin: 10px 0 5px;
+    color: #555;
+}
+
+input[type="text"],
+input[type="password"],
+input[type="email"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+button {
+    width: 100%;
+    padding: 8px;
+    background: #28a745;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+    button:hover {
+        background: #218838;
+    }
+
+.error-message {
+    color: #dc3545;
+    background: #f8d7da;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+}
+
+p {
+    text-align: center;
+    color: #777;
+}
+
+a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+    a:hover {
+        text-decoration: underline;
+    }
+
+.user-dashboard {
+    padding: 20px;
+}
+
+.transaction-list {
+    list-style: none;
+    padding: 0;
+}
+
+.transaction-item {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+    .transaction-item:last-child {
+        border-bottom: none;
+    }
+
+.category-filter {
+    margin: 20px 0;
+}
+
+    .category-filter select {
+        padding: 8px;
+        border-radius: 5px;
+    }
+
+form {
+    margin: 20px 0;
+}
+
+    form label {
+        margin-top: 10px;
+    }
+
+    form input[type="text"],
+    form input[type="email"],
+    form input[type="password"] {
+        margin-top: 5px;
+    }
+
+    form button {
+        margin-top: 20px;
+    }
+
+@media (max-width: 768px) {
+    .container {
+        width: 90%;
+    }
+}
+
+.chart-container {
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 10px;
+}
+
+.user-button {
+    padding: 8px 12px;
+    font-size: 14px;
+}
+
+.user-dashboard .chart {
+    height: 300px;
+}

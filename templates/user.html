@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+    <title>Личный кабинет</title>
+</head>
+<body>
+    <div class="container">
+        <h2 class="welcome-message">Добро пожаловать, {{ user.username }}</h2>
+        <form action="{{ url_for('logout') }}" method="POST" class="logout-form">
+            <button type="submit" class="logout-button">Выход</button>
+        </form>
+
+        <h2>Импорт транзакций</h2>
+        <form action="{{ url_for('import_transactions') }}" method="POST" enctype="multipart/form-data" class="import-form">
+            <input type="file" name="file" accept=".csv" required class="file-input">
+            <button type="submit" class="import-button">Импортировать</button>
+        </form>
+
+        <h2>Добавить транзакцию</h2>
+        <form action="{{ url_for('add_transaction') }}" method="POST" class="add-transaction-form">
+            <label for="amount">Сумма:</label>
+            <input type="number" step="0.01" name="amount" required class="amount-input">
+
+            <label for="category">Категория:</label>
+            <select name="category" required class="category-select">
+                <option value="Продукты">Продукты</option>
+                <option value="Развлечения">Развлечения</option>
+                <option value="Зарплата">Зарплата</option>
+                <option value="Транспорт">Транспорт</option>
+                <option value="Коммунальные услуги">Коммунальные услуги</option>
+                <option value="Медицинские расходы">Медицинские расходы</option>
+                <option value="Образование">Образование</option>
+                <option value="Подарки и благотворительность">Подарки и благотворительность</option>
+            </select>
+
+            <label>Тип транзакции:</label>
+            <label class="transaction-type-label"><input type="radio" name="transaction_type" value="income" required> Доход</label>
+            <label class="transaction-type-label"><input type="radio" name="transaction_type" value="expense" required> Расход</label>
+
+            <label for="description">Описание:</label>
+            <input type="text" name="description" class="description-input">
+
+            <button type="submit" class="add-button">Добавить</button>
+        </form>
+
+        <h3 class="total-balance">Общий баланс: {{ total_balance }} ₽</h3>
+
+        <h2>Фильтр по категориям</h2>
+        <form action="{{ url_for('user') }}" method="GET" class="filter-form">
+            <label for="category">Выберите категорию:</label>
+            <select name="category" class="category-filter">
+                <option value="">Все категории</option>
+                {% for category in categories %}
+                <option value="{{ category[0] }}">{{ category[0] }}</option>
+                {% endfor %}
+            </select>
+            <button type="submit" class="filter-button">Фильтровать</button>
+        </form>
+
+        <h2>Ваши транзакции</h2>
+        <ul class="transaction-list">
+            {% for transaction in transactions %}
+            <li class="transaction-item">
+                {{ transaction.amount }} - {{ transaction.category }} - {{ transaction.description }} -
+                {% if transaction.transaction_type == 'income' %}
+                Доход
+                {% else %}
+                Расход
+                {% endif %}
+            </li>
+            {% endfor %}
+        </ul>
+
+        <h2>Экспорт транзакций</h2>
+        <a href="{{ url_for('export_transactions') }}" class="btn export-button">Экспортировать транзакции в CSV</a>
+
+        <h2>Структура доходов</h2>
+        <div class="chart-container">
+            <canvas id="incomeChart" class="chart"></canvas>
+        </div>
+
+        <h2>Структура расходов</h2>
+        <div class="chart-container">
+            <canvas id="expenseChart" class="chart"></canvas>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        const incomeCtx = document.getElementById('incomeChart').getContext('2d');
+        const incomeChart = new Chart(incomeCtx, {
+            type: 'pie',
+            data: {
+                labels: {{ income_labels | tojson }},
+                datasets: [{
+                    label: 'Доходы',
+                    data: {{ income_data | tojson }},
+                    backgroundColor: ['#36A2EB', '#FF6384', '#FFCE56', '#4BC0C0', '#9966FF', '#FF9F40'],
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    title: {
+                        display: true,
+                        text: 'Структура доходов'
+                    }
+                }
+            }
+        });
+
+        const expenseCtx = document.getElementById('expenseChart').getContext('2d');
+        const expenseChart = new Chart(expenseCtx, {
+            type: 'bar',
+            data: {
+                labels: {{ expense_labels | tojson }},
+                datasets: [{
+                    label: 'Расходы',
+                    data: {{ expense_data | tojson }},
+                    backgroundColor: '#FF6384',
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    title: {
+                        display: true,
+                        text: 'Структура расходов'
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
